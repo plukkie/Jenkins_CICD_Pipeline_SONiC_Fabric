@@ -40,7 +40,7 @@ pipeline {
 					echo 'This can take ~15 minutes.....'
                                         sleep( time: 2 )
                                 }
-				if (env.LS != 'proceed = True') {
+				else  {
 					echo 'Job execution to provision Dev stage failed.'
 					println "${env.LS}, EXIT with errors."
             				error ("There were failures in the job template execution. Pipeline stops here.")
