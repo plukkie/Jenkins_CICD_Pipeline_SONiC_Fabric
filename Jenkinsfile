@@ -34,13 +34,13 @@ pipeline {
       		
 		steps {
 			script {
-				echo "${env.LS}"
+				//echo "${env.LS}"
 				if (env.LS == 'proceed = True') {
 					echo 'Dev Network provisioning finished. Proceed to Stage Dev: Start Dev network.'
 					echo 'This can take ~15 minutes.....'
                                         sleep( time: 2 )
                                 }
-				else {
+				if (env.LS != 'proceed = True') {
 					echo 'Job execution to provision Dev stage failed.'
 					println "${env.LS}, EXIT with errors."
             				error ("There were failures in the job template execution. Pipeline stops here.")
