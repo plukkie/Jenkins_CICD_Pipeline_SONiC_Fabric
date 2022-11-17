@@ -7,6 +7,7 @@ pipeline {
 		steps {
 			sh 'pip install -r pyrequirements.txt'
 			sh 'python3 -m py_compile startcicd.py'
+			sh 'apt-get install -y iputils-ping'
 			stash(name: 'compiled-results', includes: '*.py*')
 		}
 	}
