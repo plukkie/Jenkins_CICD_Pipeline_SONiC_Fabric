@@ -34,7 +34,7 @@ pipeline {
       		
 		steps {
 			script {
-				//echo "${env.LS}"
+				echo "${env.LS}"
 				if (env.LS == 'proceed = True') {
 					echo 'Dev Network provisioning finished. Proceed to Stage Dev: Start Dev network.'
 					echo 'This can take ~15 minutes.....'
