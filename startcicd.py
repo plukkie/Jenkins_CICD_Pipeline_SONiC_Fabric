@@ -859,7 +859,7 @@ if 'creategns3project' in sys.argv[1:]: #Add nodes to project in GNS3
         print('If you want to rebuild, please delete the project from GNS3.')
         print('Then restart.')
        
-        #This block is for testing, comment if done testen
+        #This block is for testing, comment if done testing
         #"""
         resp = json.loads(request ( urltuple, "get" )) #Query project to find ID
         #print(resp)
@@ -871,7 +871,7 @@ if 'creategns3project' in sys.argv[1:]: #Add nodes to project in GNS3
         #"""
 
         print('proceed = True')
-        #sys.exit() #Activate when done testing
+        sys.exit() #Activate when done testing
     else:
         projectid = json.loads(response)['project_id']
         print('Project ' + projectid + ' created.')
