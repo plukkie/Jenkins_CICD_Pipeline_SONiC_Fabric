@@ -19,15 +19,37 @@ pipeline {
       		}
     	}
 	//This stage is to spare on resources in the Compute platform (Dev & Prod run together gives problems) 
-    	stage('Stop GNS3 Stage PROD') {
+    	/*stage('Stop GNS3 Stage PROD') {
       		steps {
 			echo 'Shutting down Prod fabric to conserve compute resources..'
         		sh 'python3 -u startcicd.py stopgns3 prodstage'
 			sleep( time: 3 )
       		}
+	}*/
+	stage('Stage Dev: Provision GNS3 Dev network.....') {
+		
+		environment {
+			LS = "${sh(script:'python3 -u startcicd.py creategns3project devstage | grep "proceed"', returnStdout: true).trim()}"
+    		}
+      		
+		steps {
+			script {
+				//echo "${env.LS}"
+				if (env.LS == 'proceed = True') {
+					echo 'Dev Network provisioning finished. Proceed to Stage Dev: Start Dev network.'
+					echo 'This can take ~15 minutes.....'
+                                        sleep( time: 2 )
+                                }
+				else {
+					echo 'Job execution to provision Dev stage failed.'
+					println "${env.LS}, EXIT with errors."
+            				error ("There were failures in the job template execution. Pipeline stops here.")
+                                }
+			}
+      		}
 	}
 
-    	stage('Stage Dev: Provision GNS3 Dev network') {
+    	stage('Stage Dev: Start GNS3 Dev network with closed loop verification.....') {
 		
 		environment {
 			LS = "${sh(script:'python3 -u startcicd.py startgns3 devstage | grep "proceed"', returnStdout: true).trim()}"
@@ -37,19 +59,14 @@ pipeline {
 			script {
 				//echo "${env.LS}"
 				if (env.LS == 'proceed = True') {
-					echo 'Network already provisioned. Proceed to Stage Dev: Configure Dev network.'
-					echo 'This can take ~15 minutes...'
+					echo 'Dev network succesfully started. Proceed to Stage Dev: Configure Dev network.'
+					echo 'This can take ~15 minutes.....'
                                         sleep( time: 2 )
                                 }
 				else {
-					//GNS3 API call to start Network has just been done by startcicd.py script
-					echo 'Dev network is being provisioned. This can take ~3 mins.'
-        				//sh 'python3 -u startcicd.py startgns3 devstage'
-					echo 'Waiting for systems te become active...'
-					sleep( time: 180 )
-					echo 'Done. Systems active.'
-					echo 'Proceed to Configuration of Dev Network.'
-					echo 'This can take ~15 minutes...'
+					echo 'Job execution to start Dev stage failed.'
+					println "${env.LS}, EXIT with errors."
+            				error ("There were failures while waiting to dev network becomes ready to configure. Pipeline stops here.")
                                 }
 			}
       		}
