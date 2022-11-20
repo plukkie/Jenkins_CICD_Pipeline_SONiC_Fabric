@@ -952,8 +952,10 @@ if 'gns' in urltuple[2]['runtype'] and 'start' in urltuple[0]:
                 sys.exit()
 
             if result == 'ztp_finished':
+                print('Testing finished. All Success.')
                 print('proceed = True') #Used by Jenkins
                 sys.exit()
+
             print('Sleep ' + str(st) + 'secs...')
             print()
             time.sleep(st)
