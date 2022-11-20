@@ -75,6 +75,13 @@
 		"launchsuffix"	: "launch",
 		"httpheaders"	: { "Authorization" : "Bearer Ey8BiQpWEhYD6X5UHWuWk6tACAIdbP" }
 	},
+	"ztp"	: {
+		"serverip"	      : "10.204.11.135",
+		"serverport"	      : "80",
+		"ztp_finished_dir"    : "tftpboot/ztp_finished",
+		"ztp_finished_suffix" : ".ztp.finished",
+		"prot"		      : "http://"
+	},
 	"externals" : {
 		"ansible_playbook_repo" : { "url" : "https://github.com/plukkie/FDC_Ansible_SONiC_EVPN_Fabric.git", "inventoryfile" : "hosts" }
 

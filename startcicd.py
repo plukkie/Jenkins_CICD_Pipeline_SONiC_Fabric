@@ -215,8 +215,12 @@ def request ( url, reqtype, jsondata={} ):
         #print(url[1])
         #print(jsondata)
         r = requests.put ( url[0], headers=url[1], json=jsondata )
-    
-    obj = r.content.decode('utf-8') #from bytes to dict
+  
+    statuscode = r.status_code
+    if statuscode >= 400:
+        obj = statuscode
+    else:
+        obj = r.content.decode('utf-8') #from bytes to dict
     #print(obj)
     
     return obj
@@ -806,7 +810,7 @@ def get_ansible_inventory ( ):
 
 
 def test_reachability ( addresslist):
-   
+    
     hosts = addresslist['hosts']
     result = 'down'
     pingstats = {}
@@ -833,6 +837,47 @@ def test_reachability ( addresslist):
 
     return result
 
+
+def check_ztp_finish ( addresslist):
+
+    ztpjson = settings['ztp']
+    reportdir = ztpjson['ztp_finished_dir']
+    reportfilesuffix = ztpjson['ztp_finished_suffix']
+    ztp_finish_base_url = ztpjson['prot'] + ztpjson['serverip'] + '/' + reportdir
+    hosts = addresslist['hosts']
+    result = 'down'
+    ztpstats = {}
+
+    print('Check ztp status for all nodes...')
+    time.sleep(2)
+    for ip in hosts:
+
+        checkfile = ip + reportfilesuffix
+        url = ztp_finish_base_url + '/' + checkfile
+        urltuple = ( url, {} )
+        
+        print('Check ztp status for node ' + ip + ', polling file: ' + url + '....')
+        resp = request ( urltuple, 'get' )
+ 
+        if isinstance(resp, int) and resp >= 400: #File does not exist on server (staging not finished)
+            result = 'ztp_busy'
+            print (ip, 'seems ' + result + '...')
+        else:
+            result = 'ztp_finished'
+            print ('GOOD !! ' + ip, 'is ' + result + ' !')
+
+        ztpstats[ip] = result
+        time.sleep(3)
+
+    for item in ztpstats:
+        status = ztpstats[item]
+        if status == 'ztp_busy':
+            result = status
+            break
+        else:
+            result = status
+
+    return result
 
 
 ######################## 
@@ -885,10 +930,11 @@ if 'creategns3project' in sys.argv[1:]: #Add nodes to project in GNS3
 if 'gns' in urltuple[2]['runtype'] and 'start' in urltuple[0]:
     inventory = get_ansible_inventory ()
     starttimeout = settings['gns3']['starttimeout']
+    st = 10 #secs
 
-    if inventory == '{}':
+    if inventory == '{}': #Not able to create inventory, lets wait maximum timeout for nodes to start 
         print('proceed = Wait') #used by jenkins
-    else:
+    else: #Check startup startup status of nodes
         t1 = datetime.strptime((datetime.now()).strftime("%H:%M:%S"), "%H:%M:%S")
         print()
         print('Trying to reach hosts with pings for ' + str(starttimeout) + ' secs.')
@@ -897,17 +943,20 @@ if 'gns' in urltuple[2]['runtype'] and 'start' in urltuple[0]:
         while True:
             t2 = datetime.strptime((datetime.now()).strftime("%H:%M:%S"), "%H:%M:%S")
             delta = t2 - t1
-            result = test_reachability ( inventory )
+            result = check_ztp_finish ( inventory )
+            #print(result)
 
             if delta.total_seconds() > starttimeout:
                 print('Reached timeout. Seems project is unreachable indefinately.')
                 print('proceed = False') #Used by Jenkins
                 sys.exit()
 
-            if result == 'up':
-                result = test_reachability ( inventory ) #Do one more time testing
+            if result == 'ztp_finished':
                 print('proceed = True') #Used by Jenkins
                 sys.exit()
+            print('Sleep ' + str(st) + 'secs...')
+            print()
+            time.sleep(st)
 
 
 
