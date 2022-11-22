@@ -49,7 +49,7 @@ pipeline {
       		}
 	}
 
-    	stage('Stage Dev: Start GNS3 Dev network with closed loop verification.....') {
+    	stage('Stage Dev: Start GNS3 Dev network with ztp finished verification.....') {
 		
 		environment {
 			LS = "${sh(script:'python3 -u startcicd.py startgns3 devstage | grep "proceed"', returnStdout: true).trim()}"
