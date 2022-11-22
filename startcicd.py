@@ -218,7 +218,9 @@ def request ( url, reqtype, jsondata={} ):
   
     statuscode = r.status_code
     if statuscode >= 400:
-        obj = statuscode
+        #obj = statuscode
+        #print(r.content.decode('utf-8'))
+        obj = r.content.decode('utf-8') #from bytes to dict
     else:
         obj = r.content.decode('utf-8') #from bytes to dict
     #print(obj)
@@ -899,6 +901,7 @@ if urltuple[0] == 'proceed = True': #GNS3 is already running, Report back to pro
 response = request ( urltuple, "post") #Request API POST request
 
 if 'creategns3project' in sys.argv[1:]: #Add nodes to project in GNS3
+    #print(response)
     if 'already exists' in response: #project was already created
         print(json.loads(response)['message'])
         print('If you want to rebuild, please delete the project from GNS3.')
