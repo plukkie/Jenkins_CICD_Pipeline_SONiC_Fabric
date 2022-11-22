@@ -861,7 +861,7 @@ def check_ztp_finish ( addresslist):
         print('Check ztp status for node ' + ip + ', polling file: ' + url + '....')
         resp = request ( urltuple, 'get' )
  
-        if isinstance(resp, int) and resp >= 400 or isinstance(resp, str) and '40' in resp: #File does not exist on server (staging not finished)
+        if isinstance(resp, int) and resp >= 400 or isinstance(resp, str) and '404' in resp or isinstance(resp, str) and 'Not Found' in resp: #File does not exist on server (staging not finished)
             result = 'ztp_busy'
             print (ip, 'seems ' + result + '...')
         else:
