@@ -141,7 +141,9 @@ pipeline {
 			}
 		}
         }
-    	"""
+	  
+	  
+    	/*
 	stage('Stage Prod: Provision GNS3 prod network') {
 		
 		environment {
@@ -236,7 +238,7 @@ pipeline {
 			}
 		}
         }
-	"""
+	*/
 
   }
 }
