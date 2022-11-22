@@ -49,7 +49,7 @@ pipeline {
       		}
 	}
 
-    	stage('Stage Dev: Start ZTP staging.....') {
+    	stage('Stage Dev: Start GNS3 ZTP staging.....') {
 		
 		environment {
 			LS = "${sh(script:'python3 -u startcicd.py startgns3 devstage | grep "proceed"', returnStdout: true).trim()}"
@@ -72,7 +72,7 @@ pipeline {
       		}
 	}
 
-	stage("Stage Dev: Configure Dev network....") {
+	stage("Stage Dev: Configure GNS3 Dev network....") {
 
 		environment {
 			LS = "${sh(script:'python3 -u startcicd.py launchawx devstage configure | grep "proceed"', returnStdout: true).trim()}"
@@ -115,7 +115,7 @@ pipeline {
 		}
         }
 	  
-	stage("Stage Dev: Run Closed loop Validation tests") {
+	stage("Stage Dev: GNS3 Run Closed loop Validation tests") {
 		environment {
 			LS = "${sh(script:'python3 -u startcicd.py launchawx devstage test | grep "proceed"', returnStdout: true).trim()}"
     		}
