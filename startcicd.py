@@ -861,7 +861,7 @@ def check_ztp_finish ( addresslist):
         print('Check ztp status for node ' + ip + ', polling file: ' + url + '....')
         resp = request ( urltuple, 'get' )
  
-        if isinstance(resp, int) and resp >= 400: #File does not exist on server (staging not finished)
+        if isinstance(resp, int) and resp >= 400 or isinstance(resp, str) and '40' in resp: #File does not exist on server (staging not finished)
             result = 'ztp_busy'
             print (ip, 'seems ' + result + '...')
         else:
@@ -930,7 +930,7 @@ if 'creategns3project' in sys.argv[1:]: #Add nodes to project in GNS3
     sys.exit()
 
 
-if 'gns' in urltuple[2]['runtype'] and 'start' in urltuple[0]:
+if 'gns' in urltuple[2]['runtype'] and 'start' in urltuple[0]: #START the nodes
     inventory = get_ansible_inventory ()
     starttimeout = settings['gns3']['starttimeout']
     st = 10 #secs
@@ -940,7 +940,7 @@ if 'gns' in urltuple[2]['runtype'] and 'start' in urltuple[0]:
     else: #Check startup startup status of nodes
         t1 = datetime.strptime((datetime.now()).strftime("%H:%M:%S"), "%H:%M:%S")
         print()
-        print('Trying to reach hosts with pings for ' + str(starttimeout) + ' secs.')
+        print('Waiting till all nodes reported finished status...' + str(starttimeout) + ' secs till next check.')
         print()
         
         while True:
@@ -949,7 +949,7 @@ if 'gns' in urltuple[2]['runtype'] and 'start' in urltuple[0]:
             result = check_ztp_finish ( inventory )
             #print(result)
 
-            if delta.total_seconds() > starttimeout:
+            if delta.total_seconds() > starttimeout: #Nodes did not finish in time
                 print('Reached timeout. Seems project is unreachable indefinately.')
                 print('proceed = False') #Used by Jenkins
                 sys.exit()
