@@ -72,7 +72,7 @@ pipeline {
       		}
 	}
 
-	stage("Stage Dev: Configure Dev network") {
+	stage("Stage Dev: Configure Dev network....") {
 
 		environment {
 			LS = "${sh(script:'python3 -u startcicd.py launchawx devstage configure | grep "proceed"', returnStdout: true).trim()}"
@@ -85,7 +85,7 @@ pipeline {
 				if (env.LS == 'proceed = True') { //100% oke
 					sleep( time: 10 )
 					echo 'Succesfull Job completion.'
-            				echo 'Proceed to Stage Dev fase Ping Tests.'
+            				echo 'Proceed to Stage Dev fase Validate operational status.'
 					echo 'This can take some minutes...'
 				}
 				if (env.LS.indexOf('relaunch') != -1) { //a relaunch was proposed, there were failures
@@ -98,7 +98,7 @@ pipeline {
 					
 					if (env.RL == 'proceed = True') { //100% oke
 						echo 'Succesfull Job completion.'
-            					echo 'Proceed to Stage Dev fase Ping Tests.'
+            					echo 'Proceed to Stage Dev fase Validate operational status.'
 						echo 'This can take some minutes...'
 						sleep( time: 5 )
 					} else {
@@ -115,17 +115,17 @@ pipeline {
 		}
         }
 	  
-	stage("Stage Dev: Run connectivity Tests") {
+	stage("Stage Dev: Run Closed loop Validation tests") {
 		environment {
 			LS = "${sh(script:'python3 -u startcicd.py launchawx devstage test | grep "proceed"', returnStdout: true).trim()}"
     		}
             
 		steps {
 			script {
-				echo 'Ping tests finished.'
+				echo 'Closed loop Validation succesfully finished.'
 				//echo "${env.LS}"
 				if (env.LS == 'proceed = True') {
-					echo 'All pingtests succesful.'
+					echo 'All validation tests succesful.'
 					sleep( time: 2 )
 					//This step is to spare on resources in the Compute platform (Dev & Prod run together gives problems) 
 					echo 'Will decommision Dev network to spare GNS3 resources...'
@@ -134,7 +134,8 @@ pipeline {
             				echo 'Proceed to Stage Prod fase Provisioning.'
 					sleep( time: 3 )
         			} else {
-					echo 'Pingtests failed! Something wrong in the change code?'
+					echo 'Closed loop Validation tests failed! Feeback from script:'
+					echo "${env.LS}"
             				error ("There were failures in the job template execution. Pipeline stops here.")
         			}
 			}
