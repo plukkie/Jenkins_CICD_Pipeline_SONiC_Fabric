@@ -128,10 +128,10 @@ pipeline {
 					echo 'All validation tests succesful.'
 					sleep( time: 2 )
 					//This step is to spare on resources in the Compute platform (Dev & Prod run together gives problems) 
-					echo 'Will decommision Dev network to spare GNS3 resources...'
-					sleep( time: 2 )
-					sh 'python3 -u startcicd.py stopgns3 devstage' //Stop GNS3 project
-            				echo 'Proceed to Stage Prod fase Provisioning.'
+					//echo 'Will decommision Dev network to spare GNS3 resources...'
+					//sleep( time: 2 )
+					//sh 'python3 -u startcicd.py stopgns3 devstage' //Stop GNS3 project
+            				//echo 'Proceed to Stage Prod fase Provisioning.'
 					sleep( time: 3 )
         			} else {
 					echo 'Closed loop Validation tests failed! Feeback from script:'
