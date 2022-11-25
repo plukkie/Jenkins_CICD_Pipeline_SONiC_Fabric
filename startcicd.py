@@ -109,9 +109,15 @@ def return_url ( settingsobject ):
                 else:
                     print('No stagefase specified. Please add "configure" or "test"')
                     sys.exit()
+            elif 'template' in a[2]: #Template specified on cli
+                try:
+                    jtname = a[3] #Template name in Tower to run
+                except:
+                    print('No Tower Project template name specified.\nPlease add "template <Your_Tower_Template_Name>"')
+                    sys.exit()
       
             else:
-                print('No Stage specified. Please add "devstage" or "prodstage"')
+                print('No Stage specified. Please add "devstage" or "prodstage" or "template <template>"')
                 sys.exit()
 
             templates = resp['count'] #number of job templates found
