@@ -19,7 +19,7 @@ pipeline {
       		}
     	}
 
-	stage("Stage Dev: Configure GNS3 Dev network for Day2 changes....") {
+	stage("Stage Dev: Configure Day2 changes on GNS3 Dev network....") {
 
 		environment {
 			LS = "${sh(script:'python3 -u startcicd.py launchawx template "Template SONiC DEV Fabric Day2 CONFIG" | grep "proceed"', returnStdout: true).trim()}"
