@@ -43,7 +43,7 @@ pipeline {
                                         sleep( time: 2 )
                                 }
 				else if  (env.LS == 'proceed = noztp_check') {
-					noztpcheck = 'noztp_check'
+					env.noztpcheck = 'noztp_check'
 					echo 'Project already exists in GNS3. Nodes will start without ZTP.'
 					echo 'Wait for nodes to become ready while booting...'
 					sleep( time: 2 )
@@ -60,13 +60,13 @@ pipeline {
     	stage('Stage Dev: Start GNS3 ZTP staging.....') {
 		
 		environment {
-			LS = "${sh(script:'python3 -u startcicd.py startgns3 devstage $noztpcheck| grep "proceed"', returnStdout: true).trim()}"
+			LS = "${sh(script:'python3 -u startcicd.py startgns3 devstage ${env.noztpcheck} | grep "proceed"', returnStdout: true).trim()}"
 		}
 		
 		steps {
 			script {
 				//echo "${env.LS}"
-				echo $noztpcheck
+				echo $env.noztpcheck
 				if (env.LS == 'proceed = True') {
 					echo 'Dev network succesfully started. Proceed to Stage Dev: Configure Dev network.'
 					echo 'This can take ~15 minutes.....'
