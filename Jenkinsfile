@@ -47,7 +47,7 @@ pipeline {
 					echo 'Project already exists in GNS3. Nodes will start without ZTP.'
 					sleep( time: 2 )
 				}
-				if  (env.LS != 'proceed = True') && (env.LS != 'proceed = noztp_check') {
+				if  (env.LS != 'proceed = True') AND (env.LS != 'proceed = noztp_check') {
 					echo 'Job execution to provision Dev stage failed.'
 					println "${env.LS}, EXIT with errors."
             				error ("There were failures in the job template execution. Pipeline stops here.")
