@@ -939,7 +939,7 @@ if 'gns' in urltuple[2]['runtype'] and 'start' in urltuple[0]: #Nodes are starte
         print('Cli arg "noztp_check" discovered. Assuming nodes are already ZTP staged and reachable.')
         print('Will wait ' + str(settings['gns3']['boottimer']) + ' secs for systems to become ready.') 
         time.sleep(settings['gns3']['boottimer'])
-        print('proceed == True')
+        print('proceed = True')
         sys.exit()
 
     inventory = get_ansible_inventory ()
