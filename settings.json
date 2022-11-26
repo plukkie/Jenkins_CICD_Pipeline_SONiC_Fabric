@@ -9,7 +9,7 @@
 		"nodesstopuri"	: "stop",
 		"prot"		: "http://",
 		"starttimeout"  : 1500,
-		"boottimer"	: 150,
+		"boottimer"	: 180,
 		"newprojectdevjson": {
 				    "name" : "SONiC_Dev_Fabric",
 				    "auto_open" : true,
