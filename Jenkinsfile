@@ -1,4 +1,4 @@
-def noztp = ''
+def noztp_check = ''
 
 pipeline {
   agent any
@@ -43,7 +43,7 @@ pipeline {
                                         sleep( time: 2 )
                                 }
 				if  (env.LS == 'proceed = noztp_check') {
-					noztp = 'noztp_check'
+					noztp_check = 'noztp_check'
 					echo 'Project already exists in GNS3. Nodes will start without ZTP.'
 					sleep( time: 2 )
 				}
