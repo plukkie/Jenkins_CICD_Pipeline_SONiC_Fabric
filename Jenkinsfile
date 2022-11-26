@@ -58,14 +58,15 @@ pipeline {
 
     	stage('Stage Dev: Start GNS3 ZTP staging.....') {
 		
-		
-		environment {
-			if (noztp == False) {
+		if (noztp == False) {
+			environment {
 				LS = "${sh(script:'python3 -u startcicd.py startgns3 devstage | grep "proceed"', returnStdout: true).trim()}"
 			}
-			else {
+		}
+		else {
+			environment {
 				LS = "${sh(script:'python3 -u startcicd.py startgns3 devstage noztp_check | grep "proceed"', returnStdout: true).trim()}"
-				}
+			}
     		}
       		
 		steps {
