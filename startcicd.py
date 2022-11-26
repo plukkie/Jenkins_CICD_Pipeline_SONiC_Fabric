@@ -154,7 +154,7 @@ def return_url ( settingsobject ):
     else: #No cli arguments given
         print('\nusage : ' + sys.argv[0] + ' <option>\n')
         print(' - creategns3project devstage/prodstage : will start GNS3 dev or prod project')
-        print(' - startgns3 devstage/prodstage : will start GNS3 project')
+        print(' - startgns3 devstage/prodstage [ optional: noztp_check ]: start GNS3 project')
         print(' - stopgns3 devstage/prodstage : will stop GNS3 project')
         print(' - launchawx devstage: will start job template for test env on Ansible tower')
         print(' - launchawx prodstage: will start job template for prod env on Ansible tower')
@@ -913,18 +913,15 @@ if 'creategns3project' in sys.argv[1:]: #Add nodes to project in GNS3
         print('If you want to rebuild, please delete the project from GNS3.')
         print('Then restart.')
        
-        #This block is for testing, comment if done testing
-        """
         resp = json.loads(request ( urltuple, "get" )) #Query project to find ID
         #print(resp)
         #print(urltuple)
         for obj in resp:
             if obj['name'] == urltuple[3]['name']:
                 print('Project ID : ' + obj['project_id'])
-                response = json.dumps(obj)
-        """
+                #response = json.dumps(obj)
 
-        print('proceed = True')
+        print('proceed = noztp_check')
         sys.exit() #Activate when done testing
     else:
         projectid = json.loads(response)['project_id']
@@ -936,7 +933,15 @@ if 'creategns3project' in sys.argv[1:]: #Add nodes to project in GNS3
     sys.exit()
 
 
-if 'gns' in urltuple[2]['runtype'] and 'start' in urltuple[0]: #START the nodes
+if 'gns' in urltuple[2]['runtype'] and 'start' in urltuple[0]: #Nodes are started, start checking
+
+    if 'noztp_check' in sys.argv:
+        print('Cli arg "noztp_check" discovered. Assuming nodes are already ZTP staged and reachable.')
+        print('Will wait ' + str(settings['gns3']['boottimer']) + ' secs for systems to become ready.') 
+        time.sleep(settings['gns3']['boottimer'])
+        print('proceed == True')
+        sys.exit()
+
     inventory = get_ansible_inventory ()
     starttimeout = settings['gns3']['starttimeout']
     st = 10 #secs
