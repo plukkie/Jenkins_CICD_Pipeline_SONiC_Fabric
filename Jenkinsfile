@@ -45,6 +45,7 @@ pipeline {
 				else if  (env.LS == 'proceed = noztp_check') {
 					noztpcheck = 'noztp_check'
 					echo 'Project already exists in GNS3. Nodes will start without ZTP.'
+					echo 'Wait for nodes to become ready while booting...'
 					sleep( time: 2 )
 				}
 				else {
