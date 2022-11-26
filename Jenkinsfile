@@ -1,4 +1,4 @@
-def noztp_check = ''
+def noztpcheck = 'withztp'
 
 pipeline {
   agent any
@@ -43,7 +43,7 @@ pipeline {
                                         sleep( time: 2 )
                                 }
 				if  (env.LS == 'proceed = noztp_check') {
-					noztp_check = 'noztp_check'
+					noztpcheck = 'noztp_check'
 					echo 'Project already exists in GNS3. Nodes will start without ZTP.'
 					sleep( time: 2 )
 				}
@@ -59,7 +59,7 @@ pipeline {
     	stage('Stage Dev: Start GNS3 ZTP staging.....') {
 		
 		environment {
-				LS = "${sh(script:'python3 -u startcicd.py startgns3 devstage $noztp_check| grep "proceed"', returnStdout: true).trim()}"
+				LS = "${sh(script:'python3 -u startcicd.py startgns3 devstage $noztpcheck| grep "proceed"', returnStdout: true).trim()}"
 		}
 		
 		steps {
