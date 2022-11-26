@@ -58,7 +58,7 @@ pipeline {
 	}
 
     	stage('Stage Dev: Start GNS3 ZTP staging.....') {
-		echo '$noztpcheck'
+		script { echo '$noztpcheck' }
 		environment {
 			LS = "${sh(script:'python3 -u startcicd.py startgns3 devstage ${noztpcheck} | grep "proceed"', returnStdout: true).trim()}"
 		}
