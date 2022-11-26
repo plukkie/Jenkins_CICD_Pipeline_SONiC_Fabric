@@ -342,7 +342,7 @@ def provisiongns3project (jsonobject):
     url = baseurl + '/' + templatesuri
     urltuple = ( url, httpheaders )
     templates = request ( urltuple, "get" )
-    jsondict = json.loads(templates) #All templates found in GNS3 server
+    jsondict = json.loads(templates) #All templates found on GNS3 server
     newdict = { "nodes" : {}, "clouds" : {}, "hostlinkarray" : [] }
     jsonadd = {}
     switchnr = 0 #counter for only leaf & spine switches
@@ -352,18 +352,26 @@ def provisiongns3project (jsonobject):
     #First create Host nodes
     hostlinkarray = [] #This array is used to create links between leafs and hosts
     hostcount = hosts['count'] #This is hostcount per leafpair
+    totalhosts = int(hostcount * leafcount/2) #Total hosts connected to leafs
 
-    if hostcount > 0: #need to build hosts
+    if hostcount > 0: #need to build hosts connected to leafs (server nodes)
 
         hosttemplatename = hosts['name']
         leaflinkjson = hosts['leaflinks']
         hostlinkjson = hosts['hostlinks']
         hostpos = templatedict['leaf']['pos']
         posshift = nd['posshift']
+        hostmgtports = hosts['mgtport']
         createnodeurl = projecturl + '/templates'
+        macadd = ":00:01"
+        hostbasemac = hosts['mac']['base']
+        hostmacstart = hosts['mac']['start']
+        counter = 0
+        absolutehostswitchnr = leafcount + spinecount + bordercount
+
 
         for tn in jsondict: #Loop through available templates in GNS3 and find id
-            if tn['name'] == hosttemplatename: #Found template match
+            if tn['name'] == hosttemplatename: #Found template match for servernodes
                 tid = tn['template_id'] #VNF Template ID from GNS3
                 print('Found template for Hostnode with id ' + tid + ' with name ' + hosttemplatename)
                 urltuple = ( createnodeurl+'/'+tid, httpheaders )
@@ -387,13 +395,18 @@ def provisiongns3project (jsonobject):
 
                     for host in range(hostcount): #Create all hosts per leafpair
 
-
+                        counter += 1
+                        absolutehostswitchnr += 1
                         jsonadd = { "x" : x, "y" : y } #Position of the node on GNS raster
                         resp = json.loads(request ( urltuple, "post", jsonadd )) #create node in project
                         nodeid = resp['node_id'] #Get nodeid for later usage
                         time.sleep(0.5)
                         x += int(posshift/3) #How much to shift position for next device icon
                         y += int(posshift/3) #How much to shift position for next device icon
+
+
+                        hostmac = hostbasemac + str(hostmacstart) + macadd
+                        newdict['nodes']['host'+str(counter)] = { "nodeid" : nodeid, "mgtport" : hostmgtports, "mac" : hostmac, 'nr' : absolutehostswitchnr }
 
                         for linkcnt in range(2): #Create both link objects for later usage
                             linkobject = { "node_id" : nodeid, "adapter_number" : hostadapter, "port_number" : hostport }
@@ -405,6 +418,7 @@ def provisiongns3project (jsonobject):
 
                         leafadapter += leafadapterstep
                         leafport += leafportstep
+                        hostmacstart += 1
 
         newdict['hostlinkarray'] = hostlinkarray #Replace later the leafname by node_id of leaf
 
@@ -414,13 +428,13 @@ def provisiongns3project (jsonobject):
         
         if template == 'cloud': #Build Nodetype cloud
             cdict = templatedict[template] #cloud Key/values
-            if cdict['count'] == "": count = leafcount + spinecount + bordercount #Number of clouds to create
+            if cdict['count'] == "": count = leafcount + spinecount + bordercount + totalhosts #Number of clouds to create
             else: count = int(cdict['count']) #How many clouds to create
             print('Will create ' + str(count) + ' clouds for oob management ports of switches..')
             time.sleep(1)
 
-            pos = cdict['pos']
-            port = cdict['port']
+            pos = cdict['pos'] #Which pos will clouds be drawn in raster
+            port = cdict['port'] #Adapter, port of eth port
             cid = { "compute_id" : "local", "x" : pos['x'], "y" : pos['y'] }
             for tn in jsondict: #Loop through available templates in GNS3 and find id
                 if tn['name'] == reqname: #Found template matching desired cloud role
@@ -674,8 +688,10 @@ def provisiongns3project (jsonobject):
 
 
         #print(newdict['hostlinkarray'])
-        
-        vltlinks = len(obj['vlt'])
+        try:
+            vltlinks = len(obj['vlt'])
+        except:
+            vltlinks = 0
 
         if vltlinks != 0: #Need to add vlt links
             switchnr = int(obj['nr'])
@@ -726,7 +742,7 @@ def provisiongns3project (jsonobject):
         clouddict = newdict['clouds'][cloud]
         
         for fabricrole in newdict['nodes']:
-            if 'leaf' in fabricrole or 'spine' in fabricrole or 'border' in fabricrole:
+            if 'leaf' in fabricrole or 'spine' in fabricrole or 'border' or 'host' in fabricrole:
                 dictobj = newdict['nodes'][fabricrole]
                 switchnr = dictobj['nr']
                 if str(cloud) == (str(switchnr)): #Found match to build link between cloud and switch
