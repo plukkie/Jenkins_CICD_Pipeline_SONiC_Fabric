@@ -1,3 +1,5 @@
+def noztp = False
+
 pipeline {
   agent any
   
@@ -40,7 +42,12 @@ pipeline {
 					echo 'This can take ~15 minutes if ZTP staging is involved.....'
                                         sleep( time: 2 )
                                 }
-				else  {
+				if  (env.LS == 'proceed = noztp_check') {
+					noztp = True
+					echo 'Project already exists in GNS3. Nodes will start without ZTP.'
+					sleep( time: 2 )
+				}
+				if  (env.LS != 'proceed = True' and env.LS != 'proceed = noztp_check') {
 					echo 'Job execution to provision Dev stage failed.'
 					println "${env.LS}, EXIT with errors."
             				error ("There were failures in the job template execution. Pipeline stops here.")
@@ -51,8 +58,13 @@ pipeline {
 
     	stage('Stage Dev: Start GNS3 ZTP staging.....') {
 		
+		
 		environment {
-			LS = "${sh(script:'python3 -u startcicd.py startgns3 devstage | grep "proceed"', returnStdout: true).trim()}"
+			if noztp == False {
+				LS = "${sh(script:'python3 -u startcicd.py startgns3 devstage | grep "proceed"', returnStdout: true).trim()}"
+			else {
+				LS = "${sh(script:'python3 -u startcicd.py startgns3 devstage noztp_check | grep "proceed"', returnStdout: true).trim()}"
+				}
     		}
       		
 		steps {
