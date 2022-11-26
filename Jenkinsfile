@@ -62,6 +62,7 @@ pipeline {
 		environment {
 			if (noztp == False) {
 				LS = "${sh(script:'python3 -u startcicd.py startgns3 devstage | grep "proceed"', returnStdout: true).trim()}"
+			}
 			else {
 				LS = "${sh(script:'python3 -u startcicd.py startgns3 devstage noztp_check | grep "proceed"', returnStdout: true).trim()}"
 				}
