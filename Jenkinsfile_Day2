@@ -81,8 +81,9 @@ pipeline {
             				//echo 'Proceed to Stage Prod fase Provisioning.'
 					sleep( time: 3 )
         			} else {
-					echo 'Closed loop Validation tests failed! Feeback from script:'
+					echo 'Closed loop Validation tests failed! Feedback from script:'
 					echo "${env.LS}"
+					echo "Job in AWX tower can be relaunched again or just run this Jenkins Day2 Job again."
             				error ("There were failures in the job template execution. Pipeline stops here.")
         			}
 			}
