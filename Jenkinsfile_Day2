@@ -61,10 +61,10 @@ pipeline {
 			}
 		}
         }
-	/*
-	stage("Stage Dev: GNS3 Run Closed loop Validation tests") {
+	
+	stage("Stage Dev: GNS3 Day2 Run Closed loop Validation tests") {
 		environment {
-			LS = "${sh(script:'python3 -u startcicd.py launchawx devstage test | grep "proceed"', returnStdout: true).trim()}"
+			LS = "${sh(script:'python3 -u startcicd.py launchawx template "Template SONiC DEV Fabric Day2 CONFIG" | grep "proceed"', returnStdout: true).trim()}"
     		}
             
 		steps {
@@ -87,7 +87,7 @@ pipeline {
         			}
 			}
 		}
-        } */
+        } 
 	
   }
 }
