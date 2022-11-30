@@ -19,7 +19,9 @@
 			"L3VRFvlan"    : "",
 			"intmgtvlan"   : "",
 			"intmgtnet"    : "",
-			"mgtnet"       : ""
+			"mgtnet"       : "",
+			"bordersubnet" : "2.0.1.0",
+			"borderas"     : 65000
 		}
 	},
 	"gns3"	: {
