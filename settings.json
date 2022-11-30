@@ -2,7 +2,8 @@
 	"fabric" : {
 		"leaf" : {
 			"as" : 65501,
-			"nameprefix" : "sonic-LEAF-"
+			"nameprefix" : "sonic-LEAF-",
+			"lacp_pcs" : [ 10, 11 ]
 		},
 		"spine" : {
 			"as" : 65001,
