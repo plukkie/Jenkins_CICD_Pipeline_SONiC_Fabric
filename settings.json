@@ -15,7 +15,7 @@
 			"loopback0net" : "",
 			"loopback1net" : "",
 			"loopback2net" : "",
-			"L3VRF"        : "",
+			"L3VRF"        : "Vrf1",
 			"L3VRFvlan"    : "",
 			"intmgtvlan"   : "",
 			"intmgtnet"    : "",
