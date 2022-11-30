@@ -3,8 +3,7 @@
 		"leaf" : {
 			"as" : 65501,
 			"nameprefix" : "sonic-LEAF-",
-			"lacp_pcs" : [ 10, 11 ],
-			"mclag" : [ 10, 11 ]
+			"lacp_pcs" : [ 10 ]
 		},
 		"spine" : {
 			"as" : 65001,
@@ -54,7 +53,7 @@
 					"mgtport" : { "adapter_number" : 0, "port_number" : 0 },
 					"hosts" : {
 						"name"  : "Enterprise SONiC 3.5.2", 
-						"count" : 1,
+						"count" : 2,
 						"leaflinks" : { "1st_adapter_number" : 4, "adapterstep" : 4, "port" : 0, "portstep" : 0 },
 						"hostlinks" : { "1st_adapter_number" : 1, "adapterstep" : 1, "port" : 0, "portstep" : 0 },
 						"mgtport" : { "adapter_number" : 0, "port_number" : 0 },
