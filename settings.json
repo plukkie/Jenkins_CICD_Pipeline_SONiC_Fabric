@@ -1,4 +1,25 @@
 {
+	"fabric" : {
+		"leaf" : {
+			"as" : 65501,
+			"nameprefix" : "sonic-LEAF-"
+		},
+		"spine" : {
+			"as" : 65001,
+			"nameprefix" : "sonic-SPINE-"
+		},
+		"common" : {
+			"interlinknet" : "",
+			"loopback0net" : "",
+			"loopback1net" : "",
+			"loopback2net" : "",
+			"L3VRF"        : "",
+			"L3VRFvlan"    : "",
+			"intmgtvlan"   : "",
+			"intmgtnet"    : "",
+			"mgtnet"       : ""
+		}
+	},
 	"gns3"	: {
 		"serverip"	: "10.204.11.142",
 		"serverport"	: "80",
