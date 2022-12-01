@@ -3,7 +3,8 @@
 		"leaf" : {
 			"as" : 65501,
 			"nameprefix" : "sonic-LEAF-",
-			"lacp_pcs" : [ 10 ]
+			"lacp_pcs" : [ 10 ],
+			"vlti-Portchannel" : 100
 		},
 		"spine" : {
 			"as" : 65001,
@@ -15,8 +16,8 @@
 			"loopback1net" : "",
 			"loopback2net" : "",
 			"L3VRF"        : "Vrf1",
-			"L3VRFvlan"    : "",
-			"intmgtvlan"   : "",
+			"L3VRFvlan"    : "60",
+			"intmgtvlan"   : "999",
 			"intmgtnet"    : "",
 			"mgtnet"       : "",
 			"bordersubnet" : "2.0.1.0",
