@@ -1,12 +1,14 @@
 {
 	"fabric" : {
 		"leaf" : {
+			"routerid" : "10.0.2.1",
 			"as" : 65501,
 			"nameprefix" : "sonic-LEAF-",
 			"lacp_pcs" : [ 10 ],
 			"vlti-Portchannel" : 100
 		},
 		"spine" : {
+			"routerid" : "10.0.1.1",
 			"as" : 65001,
 			"nameprefix" : "sonic-SPINE-"
 		},
