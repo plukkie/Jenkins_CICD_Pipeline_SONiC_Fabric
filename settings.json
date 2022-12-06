@@ -18,7 +18,9 @@
 			"L3VRF"        : "Vrf1",
 			"L3VRFvlan"    : "60",
 			"intmgtvlan"   : "999",
-			"intmgtnet"    : "",
+			"intmgtnet"    : "172.16.0.0",
+			"ipv4gw"       : "254",
+			"ipv4mask"     : "24",
 			"mgtnet"       : "",
 			"bordersubnet" : "2.0.1.0",
 			"borderas"     : 65000
