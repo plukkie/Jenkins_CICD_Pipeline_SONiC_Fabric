@@ -25,7 +25,7 @@
 			"intmgtnet"    : "172.16.0.0",
 			"ipv4gw"       : "254",
 			"ipv4mask"     : "24",
-			"mgtnet"       : "",
+			"oobmgtstart"  : "10.204.11.155",
 			"bordersubnet" : "2.0.1.0",
 			"borderas"     : 65000
 		}
