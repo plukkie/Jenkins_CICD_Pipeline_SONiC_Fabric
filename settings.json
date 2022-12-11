@@ -15,6 +15,7 @@
 			"nameprefix" : "sonic-SPINE-"
 		},
 		"common" : {
+			"slot_syntax"   : "1",
 			"interlinknet" : "",
 			"loopback0net" : "",
 			"loopback1net" : "",
@@ -78,7 +79,7 @@
 					"borderlinks" : { "1st_adapter_number" : 8, "adapterstep" : 1, "port" : 0, "portstep" : 0 }
 				},
 				"spine" : {
-					"name"  : "Enterprise SONiC 3.5.2",
+					"name"  : "Enterprise SONiC 4.0.2",
 					"count" : 2,
 					"pos"   : { "x" : 100, "y" : -200 },
 					"mac" 	: { "base" : "cc:bb:aa:", "start" : 21 },
