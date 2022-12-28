@@ -825,7 +825,7 @@ def get_ansible_inventory ( ):
                 else:
                     print('Could not find fabric with leaf or spine names.')
                     print('All ansible host IP addresses are returned.')
-                    obj[ip]['type'] = 'unknown'
+                    obj['hosts'][ip]['type'] = 'unknown'
 
         obj['leafcnt'] = leafcnt
         obj['spinecnt'] = spinecnt
@@ -876,22 +876,23 @@ def check_ztp_finish ( addresslist):
     time.sleep(2)
     for ip in hosts:
 
-        checkfile = ip + reportfilesuffix
-        url = ztp_finish_base_url + '/' + checkfile
-        urltuple = ( url, {} )
+        if hosts[ip]['type'] != 'unknown': #Only check ztp status of fabric nodes (spine/leaf)
+            checkfile = ip + reportfilesuffix
+            url = ztp_finish_base_url + '/' + checkfile
+            urltuple = ( url, {} )
         
-        print('Check ztp status for node ' + ip + ', polling file: ' + url + '....')
-        resp = request ( urltuple, 'get' )
+            print('Check ztp status for node ' + ip + ', polling file: ' + url + '....')
+            resp = request ( urltuple, 'get' )
  
-        if isinstance(resp, int) and resp >= 400 or isinstance(resp, str) and '404' in resp or isinstance(resp, str) and 'Not Found' in resp: #File does not exist on server (staging not finished)
-            result = 'ztp_busy'
-            print (ip, 'seems ' + result + '...')
-        else:
-            result = 'ztp_finished'
-            print ('GOOD !! ' + ip, 'is ' + result + ' !')
+            if isinstance(resp, int) and resp >= 400 or isinstance(resp, str) and '404' in resp or isinstance(resp, str) and 'Not Found' in resp: #File does not exist on server (staging not finished)
+                result = 'ztp_busy'
+                print (ip, 'seems ' + result + '...')
+            else:
+                result = 'ztp_finished'
+                print ('GOOD !! ' + ip, 'is ' + result + ' !')
 
-        ztpstats[ip] = result
-        time.sleep(3)
+            ztpstats[ip] = result
+            time.sleep(3)
 
     for item in ztpstats:
         status = ztpstats[item]
@@ -907,6 +908,9 @@ def check_ztp_finish ( addresslist):
 ######################## 
 ####  MAIN PROGRAM #####
 ########################
+
+# If report back with 'proceed = ....', the program should exit immediatly
+# Else Jenkins concludes wrong feedback.
 
 
 settings = readsettings ( settingsfile ) #Read settings to JSON object
