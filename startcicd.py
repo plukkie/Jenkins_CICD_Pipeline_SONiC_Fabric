@@ -158,7 +158,8 @@ def return_url ( settingsobject ):
         print(' - stopgns3 devstage/prodstage : will stop GNS3 project')
         print(' - launchawx devstage: will start job template for test env on Ansible tower')
         print(' - launchawx prodstage: will start job template for prod env on Ansible tower')
-        print('=========================================================')
+        print(' - config=<your_custom_settingsfile.json> (instead of default settings.json')
+        print('==============================================================')
         sys.exit()
 
     if 'relaunch' in url: #a job relaunch is requested, add failed hosts only
@@ -912,9 +913,17 @@ def check_ztp_finish ( addresslist):
 # If report back with 'proceed = ....', the program should exit immediatly
 # Else Jenkins concludes wrong feedback.
 
+# Check if a custom settingsfile arg was used
+# if so, set settingsfile variable
+for arg in sys.argv:
+    lowarg = arg.lower()
+    matchlist = [ 'config:', 'config=', 'settings:', 'settings=' ]
+    for matchstr in matchlist:
+        if matchstr in lowarg:
+            settingsfile=lowarg.lstrip(matchstr)
+            break
 
 settings = readsettings ( settingsfile ) #Read settings to JSON object
-
 
 # Request API call
 urltuple = return_url ( settings ) #Return required URL, headers if needed & other option data
