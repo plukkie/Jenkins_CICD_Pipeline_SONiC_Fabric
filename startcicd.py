@@ -156,10 +156,11 @@ def return_url ( settingsobject ):
         print(' - creategns3project devstage/prodstage : will start GNS3 dev or prod project')
         print(' - startgns3 devstage/prodstage [ optional: noztp_check ]: start GNS3 project')
         print(' - stopgns3 devstage/prodstage : will stop GNS3 project')
-        print(' - launchawx devstage: will start job template for test env on Ansible tower')
-        print(' - launchawx prodstage: will start job template for prod env on Ansible tower')
+        print(' - launchawx devstage: will start job template for test env on AWX (from settingsfile)')
+        print(' - launchawx prodstage: will start job template for prod env on AWX (from settingsfile)')
+        print(' - launchawx template "AWX template to start" : will start this job template on AWX')
         print(' - config=<your_custom_settingsfile.json> (instead of default settings.json')
-        print('==============================================================')
+        print('=========================================================================')
         sys.exit()
 
     if 'relaunch' in url: #a job relaunch is requested, add failed hosts only
